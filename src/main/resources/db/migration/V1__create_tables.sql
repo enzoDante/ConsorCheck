@@ -6,8 +6,8 @@ create table usuario(
     documento varchar(14) not null unique, -- cpf/cnpj
     nome_dono varchar(100),
     data_criacao datetime default current_timestamp,
-    role varchar(10) not null,
-    -- role varchar(10) not null check (role in ('ADMIN','CLIENTE','EMPRESA')),
+    -- role varchar(10) not null,
+    role varchar(10) not null check (role in ('ADMIN','CLIENTE','EMPRESA')),
     ativo boolean default true
 );
 
@@ -72,8 +72,9 @@ create table cliente_consorcio( -- cliente participa do consorcio
     data_criacao datetime default current_timestamp,
     data_atualizacao datetime,
     lance_esperado decimal(15, 2) not null,
-    status varchar(20) not null default 'PENDENTE'
-    -- status varchar(20) not null default 'PENDENTE' check (status in ('PENDENTE','APROVADO','REJEITADO','ATIVO','CANCELADO')),
+    contemplado boolean default false,
+    -- status varchar(20) not null default 'PENDENTE'
+    status varchar(20) not null default 'PENDENTE' check (status in ('PENDENTE','APROVADO','REJEITADO','ATIVO','CANCELADO')),
 );
 create table parcela_paga(
     id bigint auto_increment primary key,
@@ -83,11 +84,13 @@ create table parcela_paga(
     data_pagamento date not null,
     data_criacao datetime default current_timestamp,
     constraint fk_parcela_cliente_cons foreign key (id_cliente_consorcio) references cliente_consorcio(id) on delete cascade
+    constraint uk_parcela_cliente_numero unique (id_cliente_consorcio, numero_parcela)
 );
 create table lance_ofertado(
     id bigint auto_increment primary key,
     id_cliente_consorcio bigint not null,
     valor decimal(15,2) not null,
+    data_criacao datetime default current_timestamp,
     data_oferta date not null,
     contemplado boolean default false, -- esse lance resultou em contemplação?
     constraint fk_lance_cliente_cons foreign key (id_cliente_consorcio) references cliente_consorcio(id) on delete cascade
