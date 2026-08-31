@@ -74,7 +74,7 @@ create table cliente_consorcio( -- cliente participa do consorcio
     lance_esperado decimal(15, 2) not null,
     contemplado boolean default false,
     -- status varchar(20) not null default 'PENDENTE'
-    status varchar(20) not null default 'PENDENTE' check (status in ('PENDENTE','APROVADO','REJEITADO','ATIVO','CANCELADO')),
+    status varchar(20) not null default 'PENDENTE' check (status in ('PENDENTE','APROVADO','REJEITADO','ATIVO','CANCELADO'))
 );
 create table parcela_paga(
     id bigint auto_increment primary key,
@@ -83,7 +83,7 @@ create table parcela_paga(
     valor_pago decimal(15,2) not null,
     data_pagamento date not null,
     data_criacao datetime default current_timestamp,
-    constraint fk_parcela_cliente_cons foreign key (id_cliente_consorcio) references cliente_consorcio(id) on delete cascade
+    constraint fk_parcela_cliente_cons foreign key (id_cliente_consorcio) references cliente_consorcio(id) on delete cascade,
     constraint uk_parcela_cliente_numero unique (id_cliente_consorcio, numero_parcela)
 );
 create table lance_ofertado(

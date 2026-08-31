@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DadosFinaneciros {
+public class DadosFinanceiros {
     @Id
     private Long id;
 

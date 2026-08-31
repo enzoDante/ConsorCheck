@@ -49,5 +49,5 @@ public class Usuario {
     private Endereco endereco;
 
     @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private DadosFinaneciros dadosFinaneciros;
+    private DadosFinanceiros dadosFinanceiros;
 }
