@@ -10,6 +10,7 @@ create table usuario(
     role varchar(10) not null check (role in ('ADMIN','CLIENTE','EMPRESA')),
     ativo boolean default true
 );
+create fulltext index search_idx on usuario (nome, email, nome_dono);
 
 create table refresh_token(
     id bigint auto_increment primary key,

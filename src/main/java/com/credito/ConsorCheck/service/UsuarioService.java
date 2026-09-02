@@ -3,14 +3,21 @@ package com.credito.ConsorCheck.service;
 import com.credito.ConsorCheck.dto.UsuarioRequestDTO;
 import com.credito.ConsorCheck.dto.UsuarioResponseDTO;
 import com.credito.ConsorCheck.enums.Role;
+import com.credito.ConsorCheck.exception.InvalidDataException;
+import com.credito.ConsorCheck.exception.SQLException;
 import com.credito.ConsorCheck.mapper.UsuarioMapper;
 import com.credito.ConsorCheck.model.Usuario;
 import com.credito.ConsorCheck.repository.UsuarioRepository;
+import com.credito.ConsorCheck.validation.CnpjVerify;
+import com.credito.ConsorCheck.validation.CpfVerify;
+import jakarta.persistence.PersistenceException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,26 +33,57 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponseDTO criar(UsuarioRequestDTO dto){
-        Usuario newUser = usuarioMapper.toEntity(dto);
-        newUser.setRole(Role.ADMIN);
-        newUser.setSenha(passwordEncoder.encode(dto.getSenha()));
-        return usuarioMapper.toDTO(usuarioRepository.save(newUser));
+        try{
+            if(usuarioRepository.findByEmail(dto.getEmail()).isPresent()) throw new InvalidDataException("Email existente!", List.of());
+            if(!CnpjVerify.isCnpjValido(dto.getDocumento()) && !CpfVerify.isValid(dto.getDocumento()))
+                throw new InvalidDataException("Documento inválido, verifique se os digitos estão corretos", List.of());
+
+            Usuario newUser = usuarioMapper.toEntity(dto);
+            newUser.setRole(CnpjVerify.isCnpjValido(dto.getDocumento()) ? Role.EMPRESA : Role.CLIENTE);
+            newUser.setSenha(passwordEncoder.encode(dto.getSenha()));
+            return usuarioMapper.toDTO(usuarioRepository.save(newUser));
+        }catch (DataIntegrityViolationException e){
+            throw new SQLException("Erro de integridade no banco de dados, tente mais tarde");
+        }
     }
 
-    @Transactional
-    public List<UsuarioResponseDTO> getAll(){
-        /*List<UsuarioResponseDTO> users = usuarioMapper.toDTO(usuarioRepository.findAll());*/
-        List<Usuario> users = usuarioRepository.findAll();
-        List<UsuarioResponseDTO> usersDto = new ArrayList<>();
+    @Transactional(readOnly = true)
+    public Page<UsuarioResponseDTO> getAll(Pageable pageable){
+        Page<Usuario> users = usuarioRepository.findAll(pageable);
+        return users.map(usuarioMapper::toDTO);
+        /*List<UsuarioResponseDTO> usersDto = new ArrayList<>();
         for(Usuario i : users){
             usersDto.add(usuarioMapper.toDTO(i));
         }
-        return usersDto;
+        return usersDto;*/
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public UsuarioResponseDTO getById(Long id){
         return usuarioRepository.findById(id)
                 .map(usuarioMapper::toDTO)
                 .orElseThrow(() -> new IllegalArgumentException("erro"));
+    }
+
+    @Transactional
+    public UsuarioResponseDTO update(Long id, UsuarioRequestDTO dto){
+        Usuario user = usuarioRepository.findById(id)
+                .orElseThrow(() -> new SQLException("Usuário inexistente"));
+        usuarioMapper.updateEntityFromDto(dto, user);
+
+        return usuarioMapper.toDTO(user);
+    }
+
+    @Transactional
+    public boolean inactiveUser(Long id){
+        try{
+            Usuario user = usuarioRepository.findByIdAndAtivo(id, true)
+                    .orElseThrow(() -> new SQLException("Usuário inexistente ou ja desativado"));
+            user.setAtivo(false);
+            usuarioRepository.save(user);
+
+            return true;
+        }catch (PersistenceException e){
+            throw new SQLException("Erro de persistência de dados");
+        }
     }
 }
