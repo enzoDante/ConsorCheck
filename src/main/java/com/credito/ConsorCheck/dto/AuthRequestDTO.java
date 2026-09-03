@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthRequestDTO {
-    private String user; // nome ou email
+    private String username; // nome ou email
     private String senha;
 }

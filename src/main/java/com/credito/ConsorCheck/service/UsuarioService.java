@@ -61,7 +61,7 @@ public class UsuarioService {
     public UsuarioResponseDTO getById(Long id){
         return usuarioRepository.findById(id)
                 .map(usuarioMapper::toDTO)
-                .orElseThrow(() -> new IllegalArgumentException("erro"));
+                .orElseThrow(() -> new SQLException("Usuario não encontrado"));
     }
 
     @Transactional
@@ -74,14 +74,12 @@ public class UsuarioService {
     }
 
     @Transactional
-    public boolean inactiveUser(Long id){
+    public void inactiveUser(Long id){
         try{
             Usuario user = usuarioRepository.findByIdAndAtivo(id, true)
                     .orElseThrow(() -> new SQLException("Usuário inexistente ou ja desativado"));
             user.setAtivo(false);
             usuarioRepository.save(user);
-
-            return true;
         }catch (PersistenceException e){
             throw new SQLException("Erro de persistência de dados");
         }

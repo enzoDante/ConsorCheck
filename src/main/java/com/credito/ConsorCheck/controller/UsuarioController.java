@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/usuario")
 @Tag(name = "Usuário", description = "Endpoints para manter usuários")
@@ -40,5 +38,17 @@ public class UsuarioController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("nome").ascending());
         Page<UsuarioResponseDTO> users = usuarioService.getAll(pageable);
         return ResponseEntity.ok(users);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> update(@RequestBody UsuarioRequestDTO dto, @PathVariable Long id){
+        UsuarioResponseDTO user = usuarioService.update(id, dto);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/{id}/inactive")
+    public ResponseEntity<Void> inactiveUser(@PathVariable Long id){
+        usuarioService.inactiveUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
