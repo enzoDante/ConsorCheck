@@ -51,6 +51,9 @@ create table dados_consorcio( -- uma empresa pode ter vários consorcios
     numero_parcelas int not null,             -- prazo total do plano (ex: 180 meses)
     taxa_administracao decimal(5,2) not null, -- percentual sobre o valor da carta (ex: 18.50)
     fundo_reserva decimal(5,2) default 0,     -- percentual, opcional em muitos planos
+    -- percentual do quanto o cliente deve dedicar seu salário para não causar prejuízo a si mesmo em situações financeiras delicadas
+    -- Ex.: "não permitir que as parcelas ultrapassem 40% da renda".
+    comprometimento_maximo decimal(5, 2) default 0,
     data_criacao datetime default current_timestamp,
     data_atualizacao datetime,
     data_inicio_consorcio datetime not null,
@@ -95,4 +98,34 @@ create table lance_ofertado(
     data_oferta date not null,
     contemplado boolean default false, -- esse lance resultou em contemplação?
     constraint fk_lance_cliente_cons foreign key (id_cliente_consorcio) references cliente_consorcio(id) on delete cascade
+);
+create table analise_financeira(
+    id bigint auto_increment primary key,
+    id_usuario bigint not null,
+    id_consorcio bigint not null,
+
+    renda_mensal decimal(15,2) not null,
+    parcelas_atuais decimal(15,2) not null,
+    nova_parcela decimal(15,2) not null,
+    comprometimento_atual decimal(5,2) not null,
+    comprometimento_projetado decimal(5,2) not null,
+
+    lance_esperado decimal(15,2),
+
+    possui_capacidade_parcela boolean not null,
+    possui_capacidade_lance boolean not null,
+
+    resultado varchar(20) not null,
+
+    data_analise datetime default current_timestamp,
+
+    constraint fk_analise_usuario
+       foreign key (id_usuario)
+           references usuario(id)
+           on delete cascade,
+
+    constraint fk_analise_consorcio
+       foreign key (id_consorcio)
+           references dados_consorcio(id)
+           on delete cascade
 );

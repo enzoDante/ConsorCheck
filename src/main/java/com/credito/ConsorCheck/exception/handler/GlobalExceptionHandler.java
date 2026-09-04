@@ -5,6 +5,8 @@ import com.credito.ConsorCheck.exception.InvalidDataException;
 import com.credito.ConsorCheck.exception.SQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,6 +29,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleSQL(BusinessException ex){
         // Para o cliente, você oculta detalhes sensíveis do banco
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro Interno", "Ocorreu uma falha no processamento dos dados.");
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex){
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Credenciais inválidas", "E-mail ou senha incorretos");
+    }
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Map<String, Object>> handleDisabled(DisabledException ex){
+        return buildResponse(HttpStatus.FORBIDDEN, "Usuário inativo", "");
     }
 
     private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String title, String detail) {

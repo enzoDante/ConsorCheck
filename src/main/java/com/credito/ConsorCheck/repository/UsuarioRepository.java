@@ -18,6 +18,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     List<Usuario> buscarPorTexto(@Param("valor") String valor);
 
     Optional<Usuario> findByEmail(String email);
+    Optional<Usuario> findByDocumento(String doc);
+    boolean existsByDocumento(String doc);
     Optional<Usuario> findByIdAndAtivo(Long id, boolean ativo);
 
     Optional<Usuario> findByNomeOrEmail(String nome, String email);

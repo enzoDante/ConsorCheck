@@ -3,6 +3,7 @@ package com.credito.ConsorCheck.service;
 import com.credito.ConsorCheck.dto.UsuarioRequestDTO;
 import com.credito.ConsorCheck.dto.UsuarioResponseDTO;
 import com.credito.ConsorCheck.enums.Role;
+import com.credito.ConsorCheck.exception.BusinessException;
 import com.credito.ConsorCheck.exception.InvalidDataException;
 import com.credito.ConsorCheck.exception.SQLException;
 import com.credito.ConsorCheck.mapper.UsuarioMapper;
@@ -37,6 +38,7 @@ public class UsuarioService {
             if(usuarioRepository.findByEmail(dto.getEmail()).isPresent()) throw new InvalidDataException("Email existente!", List.of());
             if(!CnpjVerify.isCnpjValido(dto.getDocumento()) && !CpfVerify.isValid(dto.getDocumento()))
                 throw new InvalidDataException("Documento inválido, verifique se os digitos estão corretos", List.of());
+            if(usuarioRepository.existsByDocumento(dto.getDocumento())) throw new BusinessException("Documento existente!");
 
             Usuario newUser = usuarioMapper.toEntity(dto);
             newUser.setRole(CnpjVerify.isCnpjValido(dto.getDocumento()) ? Role.EMPRESA : Role.CLIENTE);
