@@ -23,7 +23,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> criar(@RequestBody UsuarioRequestDTO request){
-        UsuarioResponseDTO response = usuarioService.criar(request);
+        UsuarioResponseDTO response = usuarioService.criar(request, null);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

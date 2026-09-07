@@ -39,6 +39,9 @@ public class DadosConsorcio {
     @Column(name = "fundo_reserva", precision = 5, scale = 2, nullable = false)
     private BigDecimal fundoReserva;
 
+    @Column(name = "comprometimento_maximo", precision = 5, scale = 2)
+    private BigDecimal comprometimentoMaximo;
+
     @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao = LocalDateTime.now();
 

@@ -16,6 +16,7 @@ public interface UsuarioMapper {
     @Mapping(target = "dadosFinanceiros", ignore = true)
     Usuario toEntity(UsuarioRequestDTO dto);
 
+    @Mapping(target = "salario", source = "dadosFinanceiros.salario", defaultValue = "0")
     UsuarioResponseDTO toDTO(Usuario entity);
 
     @Mapping(target = "id", ignore = true)

@@ -4,6 +4,7 @@ import com.credito.ConsorCheck.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,4 +18,5 @@ public class UsuarioResponseDTO {
     private LocalDateTime dataCriacao;
     private Role role;
     private boolean ativo;
+    private BigDecimal salario;
 }

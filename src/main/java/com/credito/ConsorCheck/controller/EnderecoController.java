@@ -18,7 +18,7 @@ public class EnderecoController {
 
     @PostMapping
     public ResponseEntity<EnderecoResponseDTO> criar(@RequestBody EnderecoRequestDTO dto){
-        EnderecoResponseDTO response = enderecoService.criar(dto);
+        EnderecoResponseDTO response = enderecoService.criar(dto, null);
         return ResponseEntity.ok(response);
     }
 

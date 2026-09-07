@@ -11,7 +11,16 @@ create table usuario(
     ativo boolean default true
 );
 create fulltext index search_idx on usuario (nome, email, nome_dono);
-
+create table empresa_cliente(
+    id bigint auto_increment primary key,
+    id_empresa bigint not null,
+    id_cliente bigint not null,
+    data_criacao datetime default current_timestamp,
+    data_atualizacao datetime,
+    constraint fk_empresa_cliente_empresa foreign key (id_empresa) references usuario(id) on delete cascade,
+    constraint fk_empresa_cliente_cliente foreign key (id_cliente) references usuario(id) on delete cascade,
+    constraint uk_empresa_cliente unique (id_empresa, id_cliente)
+);
 create table refresh_token(
     id bigint auto_increment primary key,
     id_usuario bigint not null,

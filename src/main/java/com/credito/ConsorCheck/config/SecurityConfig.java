@@ -41,13 +41,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 // .anyRequest().permitAll() // tudo liberado por enquanto
                         .requestMatchers(HttpMethod.POST, "/api/usuario").permitAll()
+                        // .requestMatchers("/api/consorcio/**").hasRole("EMPRESA")
                         .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        // .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) — quando tiver o filtro JWT pronto
 
         return http.build();
     }
