@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ParcelaPagaRepository extends JpaRepository<ParcelaPaga, Long> {
+    boolean existsByClienteConsorcioIdAndNumeroParcela(Long idConsorcio, int numeroParcela);
+    long countByClienteConsorcioId(Long clienteConsorcioId);
 }
