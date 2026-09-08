@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ParcelaPagaService {
@@ -52,5 +53,35 @@ public class ParcelaPagaService {
         }
 
         return parcelaPagaMapper.toDTO(parcela);
+    }
+
+    @Transactional
+    public void alterarStatus(Long idClienteConsorcio, StatusCliente status){
+        ClienteConsorcio clienteConsorcio = clienteConsorcioRepository.findById(idClienteConsorcio)
+                .orElseThrow(() -> new SQLException("Não foi possível encontrar essa relação de cliente e consorcio"));
+        clienteConsorcio.setStatus(status);
+        clienteConsorcioRepository.save(clienteConsorcio);
+    }
+
+    @Transactional(readOnly = true)
+    public ParcelaPagaResponseDTO getParcela(Long id){
+        ParcelaPaga parcela = parcelaPagaRepository.findById(id)
+                .orElseThrow(() -> new SQLException("Não foi possível encontrar essa parcela"));
+        return parcelaPagaMapper.toDTO(parcela);
+    }
+    @Transactional(readOnly = true)
+    public List<ParcelaPagaResponseDTO> getParcelasByIdClienteConsorcio(Long idClienteConsorcio){
+        List<ParcelaPaga> parcelas = parcelaPagaRepository.findByClienteConsorcioId(idClienteConsorcio);
+        return parcelas.stream().map(parcelaPagaMapper::toDTO).toList();
+    }
+    @Transactional(readOnly = true)
+    public List<ParcelaPagaResponseDTO> getParcelasByIdCliente(Long idCliente){
+        List<ParcelaPaga> parcelas = parcelaPagaRepository.findByClienteConsorcioUsuarioId(idCliente);
+        return parcelas.stream().map(parcelaPagaMapper::toDTO).toList();
+    }
+    @Transactional(readOnly = true)
+    public List<ParcelaPagaResponseDTO> getParcelasByIdConsorcio(Long idConsorcio){
+        List<ParcelaPaga> parcelas = parcelaPagaRepository.findByClienteConsorcioConsorcioId(idConsorcio);
+        return parcelas.stream().map(parcelaPagaMapper::toDTO).toList();
     }
 }
