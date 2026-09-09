@@ -29,7 +29,7 @@ public class UserVerify {
         return true;
     }
 
-    private UserDetailsImpl verifyAuth(){
+    public UserDetailsImpl verifyAuth(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         boolean autenticado = auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);
         if(!autenticado)
