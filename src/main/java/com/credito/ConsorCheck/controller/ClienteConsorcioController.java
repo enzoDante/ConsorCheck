@@ -1,5 +1,6 @@
 package com.credito.ConsorCheck.controller;
 
+import com.credito.ConsorCheck.dto.AnaliseFinanceiraResponseDTO;
 import com.credito.ConsorCheck.dto.ClienteConsorcioRequestDTO;
 import com.credito.ConsorCheck.dto.ClienteConsorcioResponseDTO;
 import com.credito.ConsorCheck.enums.StatusCliente;
@@ -19,8 +20,8 @@ public class ClienteConsorcioController {
     }
 
     @PostMapping("/{idUsuario}")
-    public ResponseEntity<ClienteConsorcioResponseDTO> criar(@RequestBody ClienteConsorcioRequestDTO request, @PathVariable Long idUsuario){
-        ClienteConsorcioResponseDTO response = clienteConsorcioService.criar(request, idUsuario);
+    public ResponseEntity<AnaliseFinanceiraResponseDTO> criar(@RequestBody ClienteConsorcioRequestDTO request, @PathVariable Long idUsuario){
+        AnaliseFinanceiraResponseDTO response = clienteConsorcioService.criar(request, idUsuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -40,5 +41,11 @@ public class ClienteConsorcioController {
     public ResponseEntity<List<ClienteConsorcioResponseDTO>> getByConsorcio(@PathVariable Long idConsorcio){
         List<ClienteConsorcioResponseDTO> response = clienteConsorcioService.getByConsorcio(idConsorcio);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/analise/{idClienteConsorcio}")
+    public ResponseEntity<List<AnaliseFinanceiraResponseDTO>> listarAnalisesByClienteConsorcioId(@PathVariable Long idClienteConsorcio){
+        List<AnaliseFinanceiraResponseDTO> analises = clienteConsorcioService.listarAnalisesByClienteConsorcio(idClienteConsorcio);
+        return ResponseEntity.ok(analises);
     }
 }

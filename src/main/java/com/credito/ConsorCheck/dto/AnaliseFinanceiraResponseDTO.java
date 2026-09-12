@@ -22,4 +22,5 @@ public class AnaliseFinanceiraResponseDTO {
     private boolean possuiCapacidadeLance;
     private String resultado;
     private LocalDateTime dataAnalise;
+    private ClienteConsorcioResponseDTO clienteConsorcio;
 }
