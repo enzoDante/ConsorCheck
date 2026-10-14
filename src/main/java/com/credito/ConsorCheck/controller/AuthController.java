@@ -2,6 +2,7 @@ package com.credito.ConsorCheck.controller;
 
 import com.credito.ConsorCheck.dto.AuthRequestDTO;
 import com.credito.ConsorCheck.dto.AuthResponseDTO;
+import com.credito.ConsorCheck.dto.RefreshTokenRequestDTO;
 import com.credito.ConsorCheck.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponseDTO> refresh(@RequestBody String refreshToken){
+    public ResponseEntity<AuthResponseDTO> refresh(@RequestBody RefreshTokenRequestDTO refreshToken){
         return ResponseEntity.ok(authService.refreshToken(refreshToken));
     }
 }

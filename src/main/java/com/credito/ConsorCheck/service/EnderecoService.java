@@ -39,6 +39,8 @@ public class EnderecoService {
     public EnderecoResponseDTO criar(EnderecoRequestDTO request, Long id_empresa){
         try{
             Endereco endereco = enderecoMapper.toEntity(request);
+            Usuario usuario = usuarioRepository.getReferenceById(request.getIdUsuario());
+            endereco.setUsuario(usuario);
             if(id_empresa != null){
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 boolean autenticado = auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);

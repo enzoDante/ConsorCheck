@@ -96,6 +96,11 @@ public class UsuarioService {
     public UsuarioResponseDTO update(Long id, UsuarioRequestDTO dto){
         Usuario user = usuarioRepository.findById(id)
                 .orElseThrow(() -> new SQLException("Usuário inexistente"));
+        if(!CnpjVerify.isCnpjValido(dto.getDocumento()) && !CpfVerify.isValid(dto.getDocumento()))
+            throw new InvalidDataException("Documento inválido, verifique se os digitos estão corretos", List.of());
+        if(usuarioRepository.existsByDocumento(dto.getDocumento())) throw new BusinessException("Documento existente!");
+
+        // verificar se é o usuário logado ou empresa relacionada a ele
         usuarioMapper.updateEntityFromDto(dto, user);
 
         return usuarioMapper.toDTO(user);

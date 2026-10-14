@@ -2,6 +2,7 @@ package com.credito.ConsorCheck.service;
 
 import com.credito.ConsorCheck.dto.AuthRequestDTO;
 import com.credito.ConsorCheck.dto.AuthResponseDTO;
+import com.credito.ConsorCheck.dto.RefreshTokenRequestDTO;
 import com.credito.ConsorCheck.dto.UsuarioResponseDTO;
 import com.credito.ConsorCheck.exception.BusinessException;
 import com.credito.ConsorCheck.exception.InvalidDataException;
@@ -85,8 +86,8 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthResponseDTO refreshToken(String token){
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+    public AuthResponseDTO refreshToken(RefreshTokenRequestDTO token){
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token.getToken())
                 .orElseThrow(() -> new SQLException("Token não encontrado"));
 
         if(!refreshToken.isValido())

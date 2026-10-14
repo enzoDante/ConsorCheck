@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Violação de Regra de Negócio", ex.getMessage());
     }
     @ExceptionHandler(SQLException.class)
-    public ResponseEntity<Map<String, Object>> handleSQL(BusinessException ex){
+    public ResponseEntity<Map<String, Object>> handleSQL(SQLException ex){
         // Para o cliente, você oculta detalhes sensíveis do banco
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro Interno", "Ocorreu uma falha no processamento dos dados.");
     }

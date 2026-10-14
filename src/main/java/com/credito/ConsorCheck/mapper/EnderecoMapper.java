@@ -14,6 +14,7 @@ public interface EnderecoMapper {
     @Mapping(target = "dataAtualizacao", ignore = true)
     Endereco toEntity(EnderecoRequestDTO request);
 
+    @Mapping(source = "usuario.id", target = "idUsuario")
     EnderecoResponseDTO toDTO(Endereco entity);
 
     @Mapping(target = "id", ignore = true)
